@@ -1,0 +1,31 @@
+{
+    "name": "syaiful6/headbanger",
+    "description": "Headbanger! PHP Data structure",
+    "homepage": "https://github.com/syaiful6/hedobangya",
+    "type": "library",
+    "keywords": ["collections", "data structure", "queue", "set"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Syaiful Bahri",
+            "email": "syaiful@pengunjungblog.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6"
+    },
+    "require-dev": {
+        "mockery/mockery": "~0.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Headbanger\\" : "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Headbanger\\Tests\\": "tests"
+        }
+    },
+    "minimum-stability": "dev"
+}

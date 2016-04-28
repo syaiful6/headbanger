@@ -4,12 +4,12 @@ namespace Headbanger\Tests;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 use Headbanger\Hashable;
-use Headbanger\Hashtable;
+use Headbanger\HashTable;
 
 class HashtableTest extends PHPUnit_Framework_TestCase
 {
     public function testCountEmptyReturnsZero() {
-        $map = new Hashtable();
+        $map = new HashTable();
         $this->assertCount(0, $map);
     }
 
@@ -18,7 +18,7 @@ class HashtableTest extends PHPUnit_Framework_TestCase
      */
     public function testIsEmptyReturnTrue()
     {
-        $map = new Hashtable();
+        $map = new HashTable();
         $this->assertTrue($map->isEmpty());
     }
 
@@ -27,7 +27,7 @@ class HashtableTest extends PHPUnit_Framework_TestCase
      */
     public function testOffsetSetOffsetGet()
     {
-        $map = new Hashtable();
+        $map = new HashTable();
         $this->assertCount(0, $map);
         $this->assertTrue($map->isEmpty());
 
@@ -54,7 +54,7 @@ class HashtableTest extends PHPUnit_Framework_TestCase
      */
     public function testOffsetUnset()
     {
-        $map = new Hashtable();
+        $map = new HashTable();
         $map[0] = 1;
         $this->assertCount(1, $map);
         $this->assertFalse($map->isEmpty());
@@ -68,7 +68,7 @@ class HashtableTest extends PHPUnit_Framework_TestCase
      */
     public function testIterationHashtableYieldKey()
     {
-        $map = new Hashtable();
+        $map = new HashTable();
         $map['foo'] = 'baz';
         $map['lorem'] = 'ipsum';
         // our hastable is unordered, so just test the count
@@ -77,10 +77,24 @@ class HashtableTest extends PHPUnit_Framework_TestCase
         foreach ($map as $elem) {
             $keys[] = $elem;
         }
-        file_put_contents('hashinfo', var_export($map, true));
         $this->assertCount(2, $keys);
         $this->assertTrue(in_array('foo', $keys));
         $this->assertTrue(in_array('lorem', $keys));
     }
 
+    /**
+     *
+     */
+    public function testReplaceDuringIteration()
+    {
+        $map = new HashTable();
+        $map['foo'] = 'baz';
+        $map['lorem'] = 'ipsum';
+        foreach ($map->keys() as $k) {
+            $map[$k] = 'replaced';
+        }
+        $this->assertCount(2, $map);
+        $this->assertEquals('replaced', $map['foo']);
+        $this->assertEquals('replaced', $map['lorem']);
+    }
 }

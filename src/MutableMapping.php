@@ -102,12 +102,8 @@ abstract class MutableMapping extends Mapping
             foreach ($other as $key) {
                 $this[$key] = $other[$key];
             }
-        } elseif (is_array($other)) {
+        } elseif (is_array($other) || $other instanceof \Traversable) {
             foreach ($other as $key => $value) {
-                $this[$key] = $value;
-            }
-        } else {
-            foreach ($other as list($key, $value)) {
                 $this[$key] = $value;
             }
         }

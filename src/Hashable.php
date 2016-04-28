@@ -21,5 +21,5 @@ interface Hashable
      * @param mixed $other
      * @return  boolean
      */
-    public function isEqual($other);
+    public function equals($other);
 }

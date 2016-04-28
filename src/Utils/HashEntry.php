@@ -1,5 +1,5 @@
 <?php
-namespace Headbanger;
+namespace Headbanger\Utils;
 
 class HashEntry
 {

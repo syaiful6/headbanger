@@ -4,7 +4,7 @@ namespace Headbanger;
 use Countable;
 use IteratorAggregate;
 
-abstract class MappingView extends implements Countable, IteratorAggregate
+abstract class MappingView implements IteratorAggregate, Countable
 {
 	/**
 	 * @var Mapping

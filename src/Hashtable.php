@@ -1,11 +1,11 @@
 <?php
 namespace Headbanger;
 
-use SplFixedArray;
+use Headbanger\Utils\HashStorage;
 use UnderflowException;
 use OutOfBoundsException;
 
-class Hashtable extends MutableMapping
+class HashTable extends MutableMapping
 {
     private $table;
 
@@ -61,7 +61,7 @@ class Hashtable extends MutableMapping
         $this->filled = $this->used = 0;
         $this->mask = self::MINSIZE - 1;
         $this->table = $this->createNewTable(self::MINSIZE);
-        $this->lookup = 'defaultLookup';
+        $this->lookup = 'stringOnlyLookupNoDummy';
     }
 
     /**
@@ -139,7 +139,7 @@ class Hashtable extends MutableMapping
     {
         if ($key === null || $value === null) {
 
-            throw new \InvalidArgumentExceptin("Invalid key. Key cant be Null");
+            throw new \InvalidArgumentException("Invalid key. Key cant be Null");
         }
         $oldUsed = $this->used;
         $this->_insert($key, $value);
@@ -147,7 +147,7 @@ class Hashtable extends MutableMapping
             && $this->filled * 3 >= ($this->mask + 1) * 2 )) {
             return;
         }
-        $factor = $this->used > 5000 ? 2 : 4;
+        $factor = $this->used > 50000 ? 2 : 4;
         $this->_resize($factor * $this->used);
     }
 
@@ -222,11 +222,11 @@ class Hashtable extends MutableMapping
     }
 
     /**
-     * the fast version if all the key is just string or integer
+     *
      */
-    private function defaultLookup($hash, $key)
+    private function stringOnlyLookup($hash, $key)
     {
-        if (!is_string($key) && !is_integer($key)) {
+        if (!is_string($key)) {
             $this->lookup = 'lookupEntry';
 
             return $this->lookupEntry($hash, $key);
@@ -235,26 +235,26 @@ class Hashtable extends MutableMapping
         $i = $hash & $mask;
         $entry = $this->table[$i];
         // not used yet
-        if ($entry->key === null) {
+        if ($entry->key === null || strcmp($entry->key, $key) === 0) {
 
             return $entry;
         }
         $free = null;
         if ($entry->key === $this->dummy) {
             $free = $entry;
-        } else if ($entry->hash === $hash && $entry->key === $key) {
+        } else if ($entry->hash === $hash && strcmp($entry->key, $key) === 0) {
 
             return $entry;
         }
         // collision resolution
-        for ($pertub = $hash; ;$pertub >>= self::PERTURB_SHIFT) {
-            $i = ($i << 2) + $i + $pertub + 1;
+        for ($perturb = $hash; ;$perturb >>= self::PERTURB_SHIFT) {
+            $i = ($i << 2) + $i + $perturb + 1;
             $entry = $this->table[$i & $this->mask];
-            if ($entry->key === null) {
+            if ($entry->key === null || strcmp($entry->key, $key) === 0) {
 
                 return $free === null ? $entry : $free;
             }
-            if ($entry->hash === $hash && $entry->key === $key) {
+            if ($entry->hash === $hash && strcmp($entry->key, $key) === 0) {
 
                 return $entry;
             } else if ($entry->key === $this->dummy && $free === null) {
@@ -264,6 +264,38 @@ class Hashtable extends MutableMapping
         }
 
         throw new \RuntimeException('Failed to find slot on hashtable');
+    }
+
+    /**
+     *
+     */
+    private function stringOnlyLookupNoDummy($hash, $key)
+    {
+        if (!is_string($key)) {
+            $this->lookup = 'lookupEntry';
+
+            return $this->lookupEntry($hash, $key);
+        }
+        $mask = $this->mask;
+        $i = $hash & $mask;
+        $entry = $this->table[$i];
+
+        assert($entry->key === null || is_string($entry->key));
+        if ($entry->key === null || strcmp($entry->key, $key) === 0 ||
+            ($entry->hash === $hash && strcmp($entry->key, $key) === 0)) {
+
+            return $entry;
+        }
+
+        for ($perturb = $hash; ;$perturb >>= self::PERTURB_SHIFT) {
+            $i = ($i << 2) + $i + $perturb + 1;
+            $entry = $this->table[$i & $this->mask];
+            if ($entry->key === null || strcmp($entry->key, $key) === 0 ||
+                ($entry->hash === $hash && strcmp($entry->key, $key) === 0)) {
+
+                return $entry;
+            }
+        }
     }
 
     /**
@@ -287,8 +319,8 @@ class Hashtable extends MutableMapping
             return $entry;
         }
         // collision resolution
-        for ($pertub = $hash; ;$pertub >>= self::PERTURB_SHIFT) {
-            $i = ($i << 2) + $i + $pertub + 1;
+        for ($perturb = $hash; ;$perturb >>= self::PERTURB_SHIFT) {
+            $i = ($i << 2) + $i + $perturb + 1;
             $entry = $this->table[$i & $this->mask];
             if ($entry->key === null) {
 
@@ -301,8 +333,6 @@ class Hashtable extends MutableMapping
                 $free = $dummy;
             }
         }
-        // blow the application if we here
-        throw new \RuntimeException('Failed to find slot on hashtable');
     }
 
     /**
@@ -311,7 +341,7 @@ class Hashtable extends MutableMapping
     private function keyAreEqual($a, $b)
     {
         if (is_object($a) && $a instanceof Hashable) {
-            return $a->isEqual($b);
+            return $a->equals($b);
         }
         // otherwise just compare directly
         return $a === $b;
@@ -323,22 +353,19 @@ class Hashtable extends MutableMapping
     private function createNewTable($size)
     {
         if ($size < self::MINSIZE) {
-            throw new \InvalidArgumentExceptin(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                     'The size storage must be greater than %d',
                     self::MINSIZE
                 ));
         }
         // test if the size is power two
         if(($size & ($size - 1)) !== 0) {
-            throw new \InvalidArgumentExceptin(
+            throw new \InvalidArgumentException(
                     'You should provide size with number power 2'
                 );
         }
-        $table = new SplFixedArray($size);
+        $table = new HashStorage($size);
         $this->dummy = spl_object_hash($table);
-        foreach ($table as $k => $b) {
-            $table[$k] = new HashEntry();
-        }
         return $table;
     }
 
@@ -358,19 +385,20 @@ class Hashtable extends MutableMapping
         }
         $oldTable = clone $this->table;
         // create new table will create new dummy
-        $oldUsed = $this->used;
-        $oldSize = $oldTable->getSize();
+        $i = $this->filled;
         $oldDummy = $this->dummy;
+
         $this->table = $this->createNewTable($newsize);
         $this->used = $this->filled = 0;
 
-        for ($i = $j = 0; $i < $oldUsed && $j < $oldSize; $j++) {
+        for ($j = 0; $i > 0; $j++) {
             $entry = $oldTable[$j];
-            if ($entry->value !== Null) {
+            if ($entry->value !== null) {
                $this->insertClean($entry->hash, $entry->key, $entry->value);
-               $i++;
+               $i--;
             } elseif ($entry->key === $oldDummy) {
                 $entry->key = null;
+                $i--;
             }
         }
         $this->mask = $newsize - 1;
@@ -401,6 +429,9 @@ class Hashtable extends MutableMapping
     private function _del($entry)
     {
         $entry->key = $this->dummy;
+        if ($this->lookup === 'stringOnlyLookupNoDummy') {
+            $this->lookup = 'stringOnlyLookup';
+        }
         $entry->value = null;
         $this->used -= 1;
     }
@@ -412,11 +443,13 @@ class Hashtable extends MutableMapping
     {
         $i = $hash & $this->mask;
         $newEntry = $this->table[$i];
-        $pertub = $hash;
+        $perturb = $hash;
         while ($newEntry->key !== null) {
-            $i = ($i << 2) + $i + $pertub + 1;
+            $i = ($i << 2) + $i + $perturb + 1;
             $newEntry = $this->table[$i & $this->mask];
+            $perturb >>= self::PERTURB_SHIFT;
         }
+        assert($newEntry->value === null);
         $newEntry->hash = $hash;
         $newEntry->key = $key;
         $newEntry->value = $value;
@@ -429,14 +462,18 @@ class Hashtable extends MutableMapping
      */
     private function computeHash($key)
     {
-        if (is_object($key) && $object instanceof Hashable) {
-            $hash = $key->hashCode();
+        if (is_object($key)) {
+            if ($key instanceof Hashable) {
+                $hash = $key->hashCode();
+            } else {
+                $hash = $this->hashString(spl_object_hash($key));
+            }
         } elseif (is_numeric($key)) {
             $hash = $key;
         } elseif (is_string($key)) {
             $hash = $this->hashString($key);
         } else {
-            throw new \InvalidArgumentExceptin(sprintf(
+            throw new \InvalidArgumentException(sprintf(
                 '%s type can\'t be hashed',
                 gettype($key)
             ));

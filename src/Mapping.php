@@ -53,7 +53,7 @@ abstract class Mapping implements ArrayAccess, IteratorAggregate, Collection
 
     /**
      * Take an item in mapping by their key, return the item if exists, otherwise
-     * throw KeyException
+     * throw \OutOfBoundsException
      *
      * @param mixed $key The key of item in this mapping
      * @return mixed The item value

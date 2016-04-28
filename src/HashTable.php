@@ -482,7 +482,8 @@ class HashTable extends MutableMapping
     }
 
     /**
-     * [hashString description]
+     * Naive and dump implementation to hash string
+     *
      * @param  [type] $string [description]
      * @return [type]         [description]
      */

@@ -1,13 +1,14 @@
 <?php
 namespace Headbanger;
 
+use Countable;
 use ArrayAccess;
 use IteratorAggregate;
 use UnderflowException;
 use OutOfBoundsException;
 use Headbanger\Exception\NotSupportedException;
 
-abstract class Mapping implements ArrayAccess, IteratorAggregate, Collection
+abstract class Mapping implements Countable, ArrayAccess, IteratorAggregate
 {
 
     /**

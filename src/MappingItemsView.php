@@ -4,8 +4,18 @@ namespace Headbanger;
 use OutOfBoundsException;
 use UnderflowException;
 
-class MappingItemsView extends MappingView
+class MappingItemsView extends BaseSet
 {
+    use MappingView;
+
+    /**
+     *
+     */
+    public static function fromIterable($iterable)
+    {
+        return new Set($iterable);
+    }
+
 	/**
      *
      */
@@ -25,7 +35,7 @@ class MappingItemsView extends MappingView
             return false;
         }
         if (! $except) {
-            return $v == $value;
+            return $v === $value;
         }
     }
 

@@ -1,8 +1,12 @@
 <?php
 namespace Headbanger;
 
-class MappingValuesView extends MappingView
+use Countable;
+use IteratorAggregate;
+
+class MappingValuesView implements IteratorAggregate, Countable
 {
+    use MappingView;
     /**
      *
      */

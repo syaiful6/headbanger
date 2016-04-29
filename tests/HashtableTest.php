@@ -85,6 +85,22 @@ class HashtableTest extends PHPUnit_Framework_TestCase
     /**
      *
      */
+    public function testHashIteration()
+    {
+        $map = new HashTable();
+        $map['foo'] = 'baz';
+        $map['lorem'] = 'ipsum';
+
+        $copy = [];
+        foreach ($map as $e) {
+            $copy[] = $e;
+        }
+        $this->assertCount(2, $copy);
+    }
+
+    /**
+     *
+     */
     public function testReplaceDuringIteration()
     {
         $map = new HashTable();

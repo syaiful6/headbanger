@@ -202,21 +202,15 @@ class HashTable extends MutableMapping
         $used = $this->used;
         $pos = 0;
         $size = $this->mask;
-        while (true) {
+        for ($i = $pos; $i <= $size; $i++) {
             if ($used !== count($this)) {
                 throw new \RuntimeException(
                     "Hashtable size changed during iteration");
             }
-            $i = $pos;
-            if ($i > $size) {
-                break; // exit
-            }
             $entry = $this->table[$i];
-            while ($i <= $size && $entry->value === null) {
-                $i += 1;
-                $entry = $this->table[$i];
+            if ($entry->key === null) {
+                continue;
             }
-            $pos = $i + 1; // advance this for next
             yield $entry->key;
         }
     }

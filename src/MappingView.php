@@ -1,18 +1,12 @@
 <?php
 namespace Headbanger;
 
-use Countable;
-use IteratorAggregate;
-
-abstract class MappingView implements IteratorAggregate, Countable
+trait MappingView
 {
 	/**
 	 * @var Mapping
 	 */
 	protected $mapping;
-
-
-    protected $used;
 
 	/**
      * @var mapping

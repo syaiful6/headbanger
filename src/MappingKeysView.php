@@ -1,8 +1,9 @@
 <?php
 namespace Headbanger;
 
-class MappingKeysView extends MappingView
+class MappingKeysView extends BaseSet
 {
+    use MappingView;
 	/**
 	 *
 	 */

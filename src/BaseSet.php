@@ -2,21 +2,15 @@
 namespace Headbanger;
 
 use Countable;
-use ArrayAccess;
 use IteratorAggregate;
+use RuntimeException;
 /**
  *
  */
-abstract class BaseSet implements Countable, ArrayAccess, IteratorAggregate
+abstract class BaseSet implements Countable, IteratorAggregate
 {
     /**
-     * @param HashTable
-     */
-    protected $members;
-
-    /**
-     * @param  mixed $iterable Any PHP object that can be converted as iterator
-     *                         by itertools toIter function
+     * @param  \Traversable|array $iterable
      * @return self  The new instance current class
      */
     protected static function fromIterable($iterable)
@@ -25,50 +19,166 @@ abstract class BaseSet implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * Return the number of elements of a set.
-     *
-     * @return integer The count items in set
-     */
-    public function count()
-    {
-        return count($this->data);
-    }
-
-    /**
      * Determine a given item exists in sets, pass them to the storage
      *
      * @param  mixed   $elem
      * @return boolean
      */
-    public function contains($elem)
+    abstract public function contains($elem);
+
+    /**
+     * Test whether every element in the set is in other.
+     *
+     * @param mixed $other
+     */
+    public function isSubset($other)
     {
-        return $this->data->contains($elem);
+        $this->_sanityCheck($other, __METHOD__);
+        if (count($this) > count($other)) {
+
+            return false;
+        }
+        foreach ($this as $el) {
+            if (! $other->contains($el)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Test whether the set is a proper subset of other. In other words
+     * set <= other and set != other
+     */
+    public function isProperSubset($other)
+    {
+        $this->_sanityCheck($other, __METHOD__);
+        return count($this) < count($other) && $this->isSubset($other);
+    }
+
+    /**
+     * Test whether every element in other is in the set.
+     */
+    public function isSuperset($other)
+    {
+        $this->_sanityCheck($other, __METHOD__);
+        return count($this) < count($other) && $this->isProperSuperset($other);
+    }
+
+    /**
+     * Test whether the set is a proper superset of other
+     */
+    public function isProperSuperset($other)
+    {
+        $this->_sanityCheck($other, __METHOD__);
+        if (count($this) < count($other)) {
+
+            return false;
+        }
+
+        foreach ($other as $el) {
+            if (! $this->contains($el)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Return True if two sets have a null intersection.
+     */
+    public function isDisjoint($other)
+    {
+        foreach ($other as $el) {
+            if ($this->contains($el)) {
+
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
      *
      */
-    public function isSubset(BaseSet $other)
-    {
+     public function equals($other)
+     {
+        return count($this) === count($other) && $this->isSubset($other);
+     }
 
+    /**
+     *
+     */
+    public function union($other)
+    {
+        $chain = function () use ($other) {
+            foreach ([$this, $other] as $set) {
+                foreach ($set as $s) {
+                    yield $s;
+                }
+            }
+        };
+        return static::fromIterable($chain());
     }
 
     /**
      *
      */
-    public function union(BaseSet $other)
+    public function difference($other)
     {
-        $result = static::fromIterable($this);
-        $result->_update($other);
+        if (! $other instanceof BaseSet) {
+            if (! $other instanceof \Traversable) {
+                throw new RuntimeException(sprintf(
+                    'parameter 1 passed to %s must be instance of %s or Traversable',
+                    __METHOD__,
+                    BaseSet::class
+                ));
+            }
+            $other = static::fromIterable($other);
+        }
 
-        return $result;
+        return static::fromIterable(call_user_func(function () use ($other) {
+            foreach ($this as $value) {
+                if (! $other->contains($value)) {
+                    yield $value;
+                }
+            }
+        }));
     }
 
     /**
-     * Reset the members of set to empty
+     *
      */
-    protected function resetMembers($data)
+    public function symmetricDifference($other) {
+        if (! $other instanceof BaseSet) {
+            if (! $other instanceof \Traversable) {
+                throw new RuntimeException(sprintf(
+                    'parameter 1 passed to %s must be instance of %s or Traversable',
+                    __METHOD__,
+                    BaseSet::class
+                ));
+            }
+            $other = static::fromIterable($other);
+        }
+        $diff = $this->difference($other);
+        $diff2 = $other->difference($this);
+
+        return $diff->union($diff2);
+    }
+
+    /**
+     *
+     */
+    private function _sanityCheck($other, $method)
     {
-        $this->members = new HashTable();
+        if (! $other instanceof BaseSet) {
+            throw new RuntimeException(sprintf(
+                'parameter 1 passed to %s must be instance of %s',
+                $method,
+                BaseSet::class
+            ));
+        }
     }
 }

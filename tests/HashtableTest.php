@@ -8,6 +8,12 @@ use Headbanger\HashTable;
 
 class HashtableTest extends PHPUnit_Framework_TestCase
 {
+
+    public function tearDown()
+    {
+        m::close();
+    }
+
     public function testCountEmptyReturnsZero() {
         $map = new HashTable();
         $this->assertCount(0, $map);
@@ -66,6 +72,72 @@ class HashtableTest extends PHPUnit_Framework_TestCase
     /**
      *
      */
+    public function testSetAndGetKeyHashable()
+    {
+        $hashable = m::mock(Hashable::class)
+            ->shouldReceive('hashCode')
+            ->twice() // for setting and for getting
+            ->andReturn(1)->mock();
+
+        $map = new HashTable();
+        $map[$hashable] = 'foo';
+        $this->assertFalse($map->isEmpty());
+
+        $this->assertEquals('foo', $map[$hashable]);
+    }
+
+     /**
+     *
+     */
+    public function testSetAndContains()
+    {
+        $hashable = m::mock(Hashable::class)
+            ->shouldReceive('hashCode')
+            ->twice() // for setting and for getting
+            ->andReturn(1)->mock();
+
+        $map = new HashTable();
+        $map[$hashable] = 'foo';
+        $this->assertFalse($map->isEmpty());
+
+        $this->assertTrue($map->contains($hashable));
+    }
+
+    /**
+     *
+     */
+    public function testNonExistKeyHashable()
+    {
+        $hashable = m::mock(Hashable::class)
+            ->shouldReceive('hashCode')
+            ->once()
+            ->andReturn(1)->mock();
+        $map = new HashTable();
+        // without this, hashtable immediately return false
+        // because they check if it empty before search
+        $map['foo'] = true;
+        $this->assertFalse($map->contains($hashable));
+    }
+
+    /**
+     *
+     */
+    public function testPopAndGet()
+    {
+        $map = new HashTable();
+        $map['foo'] = 'bar';
+        $map['baz'] = 'lorem';
+
+        $this->assertEquals('bar', $map->pop('foo'));
+        $this->assertFalse($map->contains('foo'));
+        $this->assertCount(1, $map);
+
+        $this->assertEquals('lorem', $map['baz']);
+    }
+
+    /**
+     *
+     */
     public function testIterationHashtableYieldKey()
     {
         $map = new HashTable();
@@ -106,7 +178,7 @@ class HashtableTest extends PHPUnit_Framework_TestCase
         $map = new HashTable();
         $map['foo'] = 'baz';
         $map['lorem'] = 'ipsum';
-        foreach ($map->keys() as $k) {
+        foreach ($map as $k) {
             $map[$k] = 'replaced';
         }
         $this->assertCount(2, $map);

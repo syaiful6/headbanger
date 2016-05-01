@@ -10,7 +10,6 @@ use Headbanger\Exception\NotSupportedException;
 
 abstract class Mapping implements Countable, ArrayAccess, IteratorAggregate
 {
-
     /**
      * Get the mapping value by their key. if not exists return provided
      * default.
@@ -28,7 +27,7 @@ abstract class Mapping implements Countable, ArrayAccess, IteratorAggregate
 
         try {
             return $this[$key];
-        } catch(OutOfBoundsException $e) {
+        } catch (OutOfBoundsException $e) {
             if ($default === null) {
                 throw $e;
             }

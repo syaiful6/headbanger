@@ -68,7 +68,7 @@ class Set extends BaseSet
             $this->remove($elem);
         } catch (OutOfBoundsException $e) {
             // pass
-        } catch(UnderflowException $e) {
+        } catch (UnderflowException $e) {
             //pass
         }
     }
@@ -94,7 +94,7 @@ class Set extends BaseSet
     /**
      *
      */
-    public function  getIterator()
+    public function getIterator()
     {
         foreach ($this->members as $m) {
             yield $m;

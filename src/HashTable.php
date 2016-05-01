@@ -9,9 +9,9 @@ class HashTable extends MutableMapping
 {
     private $table;
 
-    private $filled = 0;
-
     private $used = 0;
+
+    protected $usable;
 
     private $mask;
 
@@ -19,13 +19,15 @@ class HashTable extends MutableMapping
 
     private $hashedString = [];
 
+    private $dummy;
+
     const MINSIZE = 8;
     const PERTURB_SHIFT = 5;
 
     /**
      * @param \Traversable|array $initial
      */
-    function __construct($initial = null)
+    public function __construct($initial = null)
     {
         $this->clear();
         if ($initial !== null) {
@@ -56,10 +58,9 @@ class HashTable extends MutableMapping
     /**
      *
      */
-    function clear()
+    public function clear()
     {
-        $this->filled = $this->used = 0;
-        $this->mask = self::MINSIZE - 1;
+        $this->used = 0;
         $this->table = $this->createNewTable(self::MINSIZE);
         $this->lookup = 'stringOnlyLookupNoDummy';
     }
@@ -90,7 +91,7 @@ class HashTable extends MutableMapping
                 $i = 1;
             }
             $entry = $this->table[$i];
-            while($entry->value === null) {
+            while ($entry->value === null) {
                 $i += 1;
                 if ($i > $this->mask) {
                     $i = 1;
@@ -111,14 +112,12 @@ class HashTable extends MutableMapping
     public function offsetGet($key)
     {
         if ($this->used === 0) {
-
             return $this->offsetMissing($key);
         }
         $hash = $this->computeHash($key);
         $lookup = $this->lookup;
         $entry = $this->$lookup($hash, $key);
         if ($entry->value === null) {
-
             return $this->offsetMissing($key);
         }
         return $entry->value;
@@ -138,17 +137,9 @@ class HashTable extends MutableMapping
     public function offsetSet($key, $value)
     {
         if ($key === null || $value === null) {
-
             throw new \InvalidArgumentException("Invalid key. Key cant be Null");
         }
-        $oldUsed = $this->used;
         $this->_insert($key, $value);
-        if (!($this->used > $oldUsed
-            && $this->filled * 3 >= ($this->mask + 1) * 2 )) {
-            return;
-        }
-        $factor = $this->used > 50000 ? 2 : 4;
-        $this->_resize($factor * $this->used);
     }
 
     /**
@@ -157,7 +148,6 @@ class HashTable extends MutableMapping
     public function offsetUnset($key)
     {
         if ($key === null) {
-
             throw new \InvalidArgumentExceptin("Invalid key. Key cant be Null");
         }
         if ($this->isEmpty()) {
@@ -168,7 +158,6 @@ class HashTable extends MutableMapping
         $lookup = $this->lookup;
         $entry = $this->$lookup($hash, $key);
         if ($entry->value === null) {
-
             throw new OutOfBoundsException("no such key in collection");
         }
         $this->_del($entry);
@@ -230,14 +219,12 @@ class HashTable extends MutableMapping
         $entry = $this->table[$i];
         // not used yet
         if ($entry->key === null || strcmp($entry->key, $key) === 0) {
-
             return $entry;
         }
         $free = null;
         if ($entry->key === $this->dummy) {
             $free = $entry;
-        } else if ($entry->hash === $hash && strcmp($entry->key, $key) === 0) {
-
+        } elseif ($entry->hash === $hash && strcmp($entry->key, $key) === 0) {
             return $entry;
         }
         // collision resolution
@@ -245,14 +232,11 @@ class HashTable extends MutableMapping
             $i = ($i << 2) + $i + $perturb + 1;
             $entry = $this->table[$i & $this->mask];
             if ($entry->key === null || strcmp($entry->key, $key) === 0) {
-
                 return $free === null ? $entry : $free;
             }
             if ($entry->hash === $hash && strcmp($entry->key, $key) === 0) {
-
                 return $entry;
-            } else if ($entry->key === $this->dummy && $free === null) {
-
+            } elseif ($entry->key === $this->dummy && $free === null) {
                 $free = $dummy;
             }
         }
@@ -277,7 +261,6 @@ class HashTable extends MutableMapping
         assert($entry->key === null || is_string($entry->key));
         if ($entry->key === null || strcmp($entry->key, $key) === 0 ||
             ($entry->hash === $hash && strcmp($entry->key, $key) === 0)) {
-
             return $entry;
         }
 
@@ -286,7 +269,6 @@ class HashTable extends MutableMapping
             $entry = $this->table[$i & $this->mask];
             if ($entry->key === null || strcmp($entry->key, $key) === 0 ||
                 ($entry->hash === $hash && strcmp($entry->key, $key) === 0)) {
-
                 return $entry;
             }
         }
@@ -300,33 +282,48 @@ class HashTable extends MutableMapping
         $mask = $this->mask;
         $i = $hash & $mask;
         $entry = $this->table[$i];
-        // not used yet
-        if ($entry->key === null) {
-
+        // not used yet, or this key is identical just return it
+        if ($entry->key === null || $entry->key === $key) {
             return $entry;
         }
         $free = null;
         if ($entry->key === $this->dummy) {
             $free = $entry;
-        } else if ($entry->hash === $hash && $this->keyAreEqual($entry->key, $key)) {
-
+        } elseif ($entry->hash === $hash && $this->keyAreEqual($entry->key, $key)) {
+            // the hash of this key are equals, test if the key indeed equals
             return $entry;
         }
         // collision resolution
         for ($perturb = $hash; ;$perturb >>= self::PERTURB_SHIFT) {
             $i = ($i << 2) + $i + $perturb + 1;
             $entry = $this->table[$i & $this->mask];
-            if ($entry->key === null) {
-
+            if ($entry->key === null || $entry->key === $key) {
                 return $free === null ? $entry : $free;
             }
             if ($entry->hash === $hash && $this->keyAreEqual($entry->key, $key)) {
-
                 return $entry;
-            } else if ($entry->key === $this->dummy && $free === null) {
+            } elseif ($entry->key === $this->dummy && $free === null) {
                 $free = $dummy;
             }
         }
+    }
+
+    /**
+     *
+     */
+    private function findEmptySlot($hash, $key)
+    {
+        if (!is_string($key)) {
+            $this->lookup = 'lookupEntry';
+        }
+        $i = $hash & $this->mask;
+        $entry = $this->table[$i];
+        for ($perturb = $hash; $entry->key !== null; $perturb >>= self::PERTURB_SHIFT) {
+            $i = ($i << 2) + $i + $perturb + 1;
+            $entry = $this->table[$i & $this->mask];
+        }
+        assert($entry->value === null);
+        return $entry;
     }
 
     /**
@@ -353,13 +350,15 @@ class HashTable extends MutableMapping
                 ));
         }
         // test if the size is power two
-        if(($size & ($size - 1)) !== 0) {
+        if (($size & ($size - 1)) !== 0) {
             throw new \InvalidArgumentException(
                     'You should provide size with number power 2'
                 );
         }
         $table = new HashStorage($size);
+        $this->usable = $this->usableFraction($size);
         $this->dummy = spl_object_hash($table);
+        $this->mask = $size - 1;
         return $table;
     }
 
@@ -377,25 +376,22 @@ class HashTable extends MutableMapping
                     'Failed rezise hash table'
                 ));
         }
-        $oldTable = clone $this->table;
-        // create new table will create new dummy
-        $i = $this->filled;
-        $oldDummy = $this->dummy;
-
+        $oldTable = $this->table;
+        $oldsize = $oldTable->getSize();
+        $dummy = $this->dummy;
         $this->table = $this->createNewTable($newsize);
-        $this->used = $this->filled = 0;
 
+        $i = $this->used;
         for ($j = 0; $i > 0; $j++) {
             $entry = $oldTable[$j];
             if ($entry->value !== null) {
-               $this->insertClean($entry->hash, $entry->key, $entry->value);
-               $i--;
-            } elseif ($entry->key === $oldDummy) {
-                $entry->key = null;
+                assert($entry->key !== $dummy);
+                $this->insertClean($entry->hash, $entry->key, $entry->value);
                 $i--;
             }
         }
-        $this->mask = $newsize - 1;
+
+        $this->usable -= $this->used;
     }
 
     /**
@@ -406,15 +402,29 @@ class HashTable extends MutableMapping
         $hash = $this->computeHash($key);
         $lookup = $this->lookup;
         $entry = $this->$lookup($hash, $key);
-        if ($entry->value === null) {
-            $this->used += 1;
-            if ($entry->key !== $this->dummy) {
-                $this->filled += 1;
+        if ($entry->value !== null) {
+            $entry->value = $value;
+        } else {
+            if ($entry->key === null) {
+                // new item is added
+                if ($this->usable <= 0) {
+                    $this->_resize($this->growRate());
+                    $entry = $this->findEmptySlot($hash, $key);
+                }
+                $this->usable--;
+                $entry->key = $key;
+                $entry->hash = $hash;
+            } else {
+                if ($entry->key === $this->dummy) {
+                    $entry->key = $key;
+                    $entry->hash = $hash;
+                } else {
+                    throw new \RuntimeException('invalid hash table state');
+                }
             }
+            $this->used++;
+            $entry->value = $value;
         }
-        $entry->key = $key;
-        $entry->hash = $hash;
-        $entry->value = $value;
     }
 
     /**
@@ -437,18 +447,17 @@ class HashTable extends MutableMapping
     {
         $i = $hash & $this->mask;
         $newEntry = $this->table[$i];
-        $perturb = $hash;
-        while ($newEntry->key !== null) {
+
+        for ($perturb = $hash; $newEntry->key !== null;
+            $perturb >>= self::PERTURB_SHIFT) {
             $i = ($i << 2) + $i + $perturb + 1;
             $newEntry = $this->table[$i & $this->mask];
-            $perturb >>= self::PERTURB_SHIFT;
         }
+
         assert($newEntry->value === null);
         $newEntry->hash = $hash;
         $newEntry->key = $key;
         $newEntry->value = $value;
-        $this->used += 1;
-        $this->filled += 1;
     }
 
     /**
@@ -492,5 +501,21 @@ class HashTable extends MutableMapping
         }
         $this->hashedString[$string] = $hash;
         return $hash;
+    }
+
+    /**
+     *
+     */
+    private function usableFraction($n)
+    {
+        return ((($n << 1) + 1) / 3);
+    }
+
+    /**
+     *
+     */
+    private function growRate()
+    {
+        return ($this->used * 2) + ($this->table->getSize() >> 1);
     }
 }

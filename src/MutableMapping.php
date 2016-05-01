@@ -38,12 +38,12 @@ abstract class MutableMapping extends Mapping
             $value = $this[$key];
         } catch (OutOfBoundsException $e) {
             $error = $e;
-        } catch(UnderflowException $e) {
+        } catch (UnderflowException $e) {
             $error = $e;
         } finally {
-            if ($e !== null) {
+            if ($error !== null) {
                 if ($default === null) {
-                    throw $e;
+                    throw $error;
                 }
                 return $default; // default is setting, give em back
             }
@@ -83,7 +83,7 @@ abstract class MutableMapping extends Mapping
     public function clear()
     {
         try {
-            while (True) {
+            while (true) {
                 $this->popitem();
             }
         } catch (OutOfBoundsException $e) {
@@ -106,6 +106,10 @@ abstract class MutableMapping extends Mapping
             foreach ($other as $key => $value) {
                 $this[$key] = $value;
             }
+        } else {
+            throw new \InvalidArgumentException(sprintf(
+                'update expect parameter 1 to be iterable'
+            ));
         }
     }
 

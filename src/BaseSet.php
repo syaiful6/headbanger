@@ -35,7 +35,6 @@ abstract class BaseSet implements Countable, IteratorAggregate
     {
         $this->_sanityCheck($other, __METHOD__);
         if (count($this) > count($other)) {
-
             return false;
         }
         foreach ($this as $el) {
@@ -72,7 +71,6 @@ abstract class BaseSet implements Countable, IteratorAggregate
     {
         $this->_sanityCheck($other, __METHOD__);
         if (count($this) < count($other)) {
-
             return false;
         }
 
@@ -92,7 +90,6 @@ abstract class BaseSet implements Countable, IteratorAggregate
     {
         foreach ($other as $el) {
             if ($this->contains($el)) {
-
                 return false;
             }
         }
@@ -105,7 +102,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
      */
      public function equals($other)
      {
-        return count($this) === count($other) && $this->isSubset($other);
+         return count($this) === count($other) && $this->isSubset($other);
      }
 
     /**
@@ -151,7 +148,8 @@ abstract class BaseSet implements Countable, IteratorAggregate
     /**
      *
      */
-    public function symmetricDifference($other) {
+    public function symmetricDifference($other)
+    {
         if (! $other instanceof BaseSet) {
             if (! $other instanceof \Traversable) {
                 throw new RuntimeException(sprintf(

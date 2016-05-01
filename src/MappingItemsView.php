@@ -11,12 +11,12 @@ class MappingItemsView extends BaseSet
     /**
      *
      */
-    public static function fromIterable($iterable)
+    protected static function fromIterable($iterable)
     {
         return new Set($iterable);
     }
 
-	/**
+    /**
      *
      */
     public function contains($item)
@@ -29,7 +29,7 @@ class MappingItemsView extends BaseSet
             $except = true;
 
             return false;
-        } catch(UnderflowException $e) {
+        } catch (UnderflowException $e) {
             $except = true;
 
             return false;
@@ -44,7 +44,7 @@ class MappingItemsView extends BaseSet
      */
     public function getIterator()
     {
-    	$iterator = parent::getIterator();
+        $iterator = parent::getIterator();
         foreach ($iterator as $key) {
             yield [$key, $this->mapping[$key]];
         }

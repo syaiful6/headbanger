@@ -3,12 +3,12 @@ namespace Headbanger;
 
 trait MappingView
 {
-	/**
-	 * @var Mapping
-	 */
-	protected $mapping;
+    /**
+     * @var Mapping
+     */
+    protected $mapping;
 
-	/**
+    /**
      * @var mapping
      */
     public function __construct(Mapping $mapping)
@@ -21,7 +21,7 @@ trait MappingView
      */
     public function count()
     {
-    	return count($this->mapping);
+        return count($this->mapping);
     }
 
     /**

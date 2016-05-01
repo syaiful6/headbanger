@@ -13,7 +13,7 @@ class Set extends BaseSet
      */
     public function __construct($initial = null)
     {
-        $this->members = new HashTable();
+        $this->members = new HashMap();
         if ($initial !== null) {
             $this->_update($initial);
         }

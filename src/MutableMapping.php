@@ -102,6 +102,10 @@ abstract class MutableMapping extends Mapping
             foreach ($other as $key) {
                 $this[$key] = $other[$key];
             }
+        } elseif ($other instanceof Sequence) {
+            foreach ($other as list($k, $v)) {
+                $this[$k] = $v;
+            }
         } elseif (is_array($other) || $other instanceof \Traversable) {
             foreach ($other as $key => $value) {
                 $this[$key] = $value;

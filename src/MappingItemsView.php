@@ -22,20 +22,17 @@ class MappingItemsView extends BaseSet
     public function contains($item)
     {
         list($key, $value) = $item;
-        $except = false;
+
         try {
             $v = $this->mapping[$key];
+
+            return $v === $value;
         } catch (OutOfBoundsException $e) {
-            $except = true;
 
             return false;
         } catch (UnderflowException $e) {
-            $except = true;
 
             return false;
-        }
-        if (! $except) {
-            return $v === $value;
         }
     }
 

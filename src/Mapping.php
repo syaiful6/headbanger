@@ -18,21 +18,10 @@ abstract class Mapping implements Countable, ArrayAccess, IteratorAggregate
     public function get($key, $default = null)
     {
         if ($this->isEmpty()) {
-            if ($default === null) {
-                throw new UnderflowException(sprintf(
-                    'Trying to get item of an empty %s', get_class($this)));
-            }
             return $default;
         }
 
-        try {
-            return $this[$key];
-        } catch (OutOfBoundsException $e) {
-            if ($default === null) {
-                throw $e;
-            }
-            return $default;
-        }
+        return $this->contains($key) ? $this[$key] : $default;
     }
 
     /**

@@ -65,8 +65,6 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
                 yield $this[$i];
                 $i++;
             }
-        } catch (UnderflowException $e) {
-            // we know this empty
         } catch (OutOfRangeException $e) {
             // we already dont have item
         }

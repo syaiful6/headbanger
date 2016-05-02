@@ -6,7 +6,9 @@ use RuntimeException;
 use OutOfRangeException;
 use Headbanger\Utils\Slice;
 use Headbanger\Exceptions\ValueException;
-
+/**
+ * Require mb string or Symfony mb string polyfill
+ */
 class Str extends Sequence implements Hashable
 {
     protected $string;

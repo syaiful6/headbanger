@@ -29,10 +29,8 @@ class MappingItemsView extends BaseSet
 
             return $v === $value;
         } catch (OutOfBoundsException $e) {
-
             return false;
         } catch (UnderflowException $e) {
-
             return false;
         }
     }

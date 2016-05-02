@@ -6,7 +6,9 @@ use Countable;
 use IteratorAggregate;
 use RuntimeException;
 /**
- * This class provide common set operation like unions, difference, membership testing
+ * This class provides common set operation like unions, difference,
+ * and membership testing. Subclass only need to implements an abstract function
+ * contains, count and getIterator
  */
 abstract class BaseSet implements Countable, IteratorAggregate
 {

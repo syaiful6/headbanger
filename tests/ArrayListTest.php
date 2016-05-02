@@ -31,9 +31,9 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
     public function testAppendShouldIncreaseCount()
     {
         $list = $this->getInstance();
-        $list->append('foo');
+        $list->push('foo');
         $this->assertCount(1, $list);
-        $list->append('bar');
+        $list->push('bar');
         $this->assertCount(2, $list);
     }
 
@@ -43,7 +43,7 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
     public function testAddingItemIsEmptyFalse()
     {
         $list = $this->getInstance();
-        $list->append('foo');
+        $list->push('foo');
         $this->assertFalse($list->isEmpty());
     }
 
@@ -53,9 +53,34 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
     public function testClearCountZero()
     {
         $list = $this->getInstance();
-        $list->append('foo');
+        $list->push('foo');
         $list->clear();
         $this->assertCount(0, $list);
+    }
+
+    /**
+     *
+     */
+    public function testIterationEmptyList()
+    {
+        $list = $this->getInstance();
+        $results = [];
+        foreach ($list as $el) {
+            $results[] = $el;
+        }
+
+        $this->assertCount(0, $results);
+    }
+
+    /**
+     *
+     */
+    public function testGetItemNegativeIndices()
+    {
+        $list = $this->getInstance();
+        $list->extend([1,2,3,4]);
+        $this->assertEquals(4, $list[-1]);
+        $this->assertEquals(3, $list[-2]);
     }
 
     /**
@@ -73,7 +98,7 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
     public function testExceptionUnExistsItem()
     {
         $list = $this->getInstance();
-        $list->append('foo');
+        $list->push('foo');
         $list->remove('baz');
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Headbanger;
 
 use Headbanger\Utils\HashStorage;
@@ -487,8 +488,8 @@ class HashMap extends MutableMapping
     /**
      * Naive and dump implementation to hash string
      *
-     * @param  [type] $string [description]
-     * @return [type]         [description]
+     * @param  string $string
+     * @return integer
      */
     private function hashString($string)
     {

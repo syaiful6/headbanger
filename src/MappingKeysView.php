@@ -1,4 +1,5 @@
 <?php
+
 namespace Headbanger;
 
 class MappingKeysView extends BaseSet

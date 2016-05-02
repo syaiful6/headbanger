@@ -1,11 +1,12 @@
 <?php
+
 namespace Headbanger;
 
 use Countable;
 use IteratorAggregate;
 use RuntimeException;
 /**
- *
+ * This class provide common set operation like unions, difference, membership testing
  */
 abstract class BaseSet implements Countable, IteratorAggregate
 {
@@ -167,6 +168,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
     }
 
     /**
+     * Internal routine to check if other is instance of this class
      *
      */
     private function _sanityCheck($other, $method)

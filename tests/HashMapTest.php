@@ -138,6 +138,18 @@ class HashMapTest extends PHPUnit_Framework_TestCase
     /**
      *
      */
+    public function testGetMethod()
+    {
+        $map = new HashMap();
+        $map['foo'] = 'bar';
+
+        $this->assertEquals('bar', $map->get('foo'));
+        $this->assertEquals('default', $map->get('nonexists', 'default'));
+    }
+
+    /**
+     *
+     */
     public function testIterationHashMapYieldKey()
     {
         $map = new HashMap();

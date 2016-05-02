@@ -1,4 +1,5 @@
 <?php
+
 namespace Headbanger;
 
 use Countable;
@@ -19,7 +20,9 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
+     * Check if this sequence is empty or not
      *
+     * @return boolean
      */
     public function isEmpty()
     {
@@ -28,6 +31,9 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * Check if this sequence contains for given elem
+     *
+     * @param mixed $value
+     * @return boolean
      */
     public function contains($value)
     {
@@ -41,6 +47,10 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * Return the first index of the given value
+     *
+     * @param mixed $value
+     * @return integer
+     * @throws \Headbanger\Exceptions\ValueException if the value not in sequence
      */
     public function index($value)
     {
@@ -55,6 +65,8 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * IteratorAggregate implementation.
+     *
+     * @return Generator
      */
     public function getIterator()
     {
@@ -71,7 +83,10 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
+     * Check how many value in this sequence
      *
+     * @param mixed $value
+     * @return integer
      */
     public function countValue($value)
     {

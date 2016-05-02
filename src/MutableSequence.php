@@ -1,4 +1,5 @@
 <?php
+
 namespace Headbanger;
 
 use OutofRangeException;
@@ -8,20 +9,29 @@ abstract class MutableSequence extends Sequence
 {
     /**
      * insert value before index
+     *
+     * @param integer $index
+     * @param mixed $value
+     * @return void
      */
     abstract public function insert($index, $value);
 
     /**
+     * Push one element onto the end of sequence
      *
+     * @param mixed $value
+     * @return void
      */
-    public function append($value)
+    public function push($value)
     {
         $this->insert(count($this), $value);
     }
 
     /**
-     * This maybe slow operation but it effective, override this if there are
-     * any shortcut for it
+     * Clear the sequence. This maybe slow operation but it effective,
+     * override this if there are any shortcut for it.
+     *
+     * @return void
      */
     public function clear()
     {
@@ -36,6 +46,8 @@ abstract class MutableSequence extends Sequence
 
     /**
      * reverse this sequence in place
+     *
+     * @return void
      */
     public function reverse()
     {
@@ -47,17 +59,25 @@ abstract class MutableSequence extends Sequence
     }
 
     /**
+     * Extend the iterable
      *
+     * @param \Traversable|array $iterable
+     * @return void
      */
     public function extend($iterable)
     {
         foreach ($iterable as $el) {
-            $this->append($el);
+            $this->push($el);
         }
     }
 
     /**
+     * retrieves the item at i and also removes it from sequence
+     * default to -1, it's mean the default retrieve the last element and remove
+     * it, change to 0 if you want to make effect like array_shift
      *
+     * @param integer $i
+     * @return mixed
      */
     public function pop($i = -1)
     {

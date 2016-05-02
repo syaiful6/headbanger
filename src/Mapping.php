@@ -1,4 +1,5 @@
 <?php
+
 namespace Headbanger;
 
 use Countable;
@@ -14,6 +15,8 @@ abstract class Mapping implements Countable, ArrayAccess, IteratorAggregate
      * Get the mapping value by their key. if not exists return provided
      * default.
      *
+     * @param mixed $key The key to retrieve item on mapping
+     * @param mixed $default The default value if the mapping not contains $key
      */
     public function get($key, $default = null)
     {

@@ -559,12 +559,13 @@ class Str extends Sequence implements Hashable
     {
         if ($other instanceof Str) {
             return $this->string === strval($other);
+        } elseif (is_string($other)) {
+            return $this->string === $other;
         }
 
-        throw new ValueException(sprintf(
-                'You can only compare with string or object that has __toString. You give',
-                gettype($other)
-            ));
+        throw new ValueException(
+                'You can only compare string object with string object or string type'
+            );
     }
 
     /**

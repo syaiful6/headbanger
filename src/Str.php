@@ -23,11 +23,11 @@ class Str extends Sequence implements Hashable
 
     const ASCII_LETTERS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    const DIGITS = 0123456789;
+    const DIGITS = '0123456789';
 
     const HEXDIGITS = '0123456789abcdefABCDEF';
 
-    const OCTDIGITS = 01234567;
+    const OCTDIGITS = '01234567';
 
     const WHITESPACE = " \t\n\r\v\f";
 
@@ -108,7 +108,7 @@ class Str extends Sequence implements Hashable
      */
     public function index($sub, $start = 0, $stop = PHP_INT_MAX)
     {
-        $pos = $this->find($sub, $start, $end);
+        $pos = $this->find($sub, $start, $stop);
 
         if ($pos < 0) {
             throw new ValueException(sprintf(
@@ -127,8 +127,8 @@ class Str extends Sequence implements Hashable
      */
     public function rfind($sub, $start = 0, $stop = PHP_INT_MAX)
     {
-        $key = new Slice($start, $stop);
-        list($start, $stop, $step) = $this->indices(count($this));
+        $slice = new Slice($start, $stop);
+        list($start, $stop, $step) = $slice->indices(count($this));
         if ($sub instanceof Str ||
             (is_object($sub) && method_exists($sub, '__toString'))) {
             $sub = strval($sub);

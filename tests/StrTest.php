@@ -1,4 +1,5 @@
 <?php
+
 namespace Headbanger\Tests;
 
 use Mockery as m;
@@ -42,5 +43,25 @@ class StrTest extends PHPUnit_Framework_TestCase
     {
         $str = new Str('Fòô', 'UTF-8');
         $a = $str[3];
+    }
+
+    /**
+     *
+     */
+    public function testFindPositionSubstring()
+    {
+        $str = new Str('Fòô', 'UTF-8');
+        $this->assertEquals(1, $str->find('ò'));
+        $this->assertEquals(2, $str->rfind('ô'));
+        $this->assertEquals(-1, $str->find('S'));
+    }
+
+    /**
+     * @expectedException \Headbanger\Exceptions\ValueException
+     */
+    public function testGetIndexNonExistsSubstring()
+    {
+        $str = new Str('Bar');
+        $str->index('S');
     }
 }

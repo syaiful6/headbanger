@@ -84,6 +84,18 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     *
+     */
+    public function testClearList()
+    {
+        $list = $this->getInstance();
+        $list->extend([1,2,3,4]);
+        $this->assertCount(4, $list);
+        $list->clear();
+        $this->assertCount(0, $list);
+    }
+
+    /**
      * @expectedException UnderflowException
      */
     public function testExceptionRemoveEmptyList()

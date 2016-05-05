@@ -41,6 +41,15 @@ class ArrayList extends MutableSequence
     }
 
     /**
+     *
+     */
+    public function clear()
+    {
+        $this->items = new SplFixedArray(0);
+        $this->size = 0;
+    }
+
+    /**
      * Count the number of items
      *
      * @link http://php.net/manual/en/countable.count.php
@@ -75,7 +84,7 @@ class ArrayList extends MutableSequence
     public function offsetSet($index, $value)
     {
         if (! $index instanceof Slice) {
-            $index = $this->guardedSeek($key, __METHOD__);
+            $index = $this->guardedSeek($index, __METHOD__);
             $this->insertWhere($index, $value);
 
             return;
@@ -165,7 +174,7 @@ class ArrayList extends MutableSequence
         $container = new static();
         for ($i = 0; $i < $length; $start += $step) {
             try {
-                $container->append($this[$start]);
+                $container->push($this[$start]);
             } catch (OutOfRangeException $e) {
                 break;
             }

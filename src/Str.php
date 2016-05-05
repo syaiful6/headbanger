@@ -321,7 +321,6 @@ class Str extends Sequence implements Hashable
         return new static(ltrim($this->string, $charmast));
     }
 
-
     /**
      * Capitalize the underlying string
      */
@@ -551,6 +550,7 @@ class Str extends Sequence implements Hashable
             $hash ^= (31 * $hash) + ord($str[$i]);
         }
         $this->_hash = $hash;
+
         return $hash;
     }
 

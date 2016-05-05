@@ -46,6 +46,7 @@ abstract class MutableMapping extends Mapping
                 if ($default === null) {
                     throw $error;
                 }
+
                 return $default; // default is setting, give em back
             }
             // now exception raised, so unset this key

@@ -19,8 +19,8 @@ interface Hashable
     /**
      * Test other object or acceptable type passed is equal
      *
-     * @param mixed $other
-     * @return  boolean
+     * @param  mixed   $other
+     * @return boolean
      */
     public function equals($other);
 }

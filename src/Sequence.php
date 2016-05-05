@@ -5,7 +5,6 @@ namespace Headbanger;
 use Countable;
 use ArrayAccess;
 use IteratorAggregate;
-use UnderflowException;
 use OutOfRangeException;
 use Headbanger\Exceptions\ValueException;
 
@@ -32,7 +31,7 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
     /**
      * Check if this sequence contains for given elem
      *
-     * @param mixed $value
+     * @param  mixed   $value
      * @return boolean
      */
     public function contains($value)
@@ -42,13 +41,14 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Return the first index of the given value
      *
-     * @param mixed $value
+     * @param  mixed                                 $value
      * @return integer
      * @throws \Headbanger\Exceptions\ValueException if the value not in sequence
      */
@@ -85,7 +85,7 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
     /**
      * Check how many value in this sequence
      *
-     * @param mixed $value
+     * @param  mixed   $value
      * @return integer
      */
     public function countValue($value)
@@ -96,6 +96,7 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
                 $i += 1;
             }
         }
+
         return $i;
     }
 
@@ -109,6 +110,7 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
                 'offset must be integer'
             ));
         }
+
         return (int) $int;
     }
 

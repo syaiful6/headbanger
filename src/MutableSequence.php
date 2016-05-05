@@ -10,8 +10,8 @@ abstract class MutableSequence extends Sequence
     /**
      * insert value before index
      *
-     * @param integer $index
-     * @param mixed $value
+     * @param  integer $index
+     * @param  mixed   $value
      * @return void
      */
     abstract public function insert($index, $value);
@@ -19,7 +19,7 @@ abstract class MutableSequence extends Sequence
     /**
      * Push one element onto the end of sequence
      *
-     * @param mixed $value
+     * @param  mixed $value
      * @return void
      */
     public function push($value)
@@ -61,7 +61,7 @@ abstract class MutableSequence extends Sequence
     /**
      * Extend the iterable
      *
-     * @param \Traversable|array $iterable
+     * @param  \Traversable|array $iterable
      * @return void
      */
     public function extend($iterable)
@@ -76,7 +76,7 @@ abstract class MutableSequence extends Sequence
      * default to -1, it's mean the default retrieve the last element and remove
      * it, change to 0 if you want to make effect like array_shift
      *
-     * @param integer $i
+     * @param  integer $i
      * @return mixed
      */
     public function pop($i = -1)

@@ -63,8 +63,8 @@ class ArrayList extends MutableSequence
     /**
      * insert value before index
      *
-     * @param integer $index
-     * @param mixed $value
+     * @param  integer $index
+     * @param  mixed   $value
      * @return void
      */
     public function insert($index, $value)
@@ -77,8 +77,8 @@ class ArrayList extends MutableSequence
      * Assign a value to the specified offset
      *
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $index
-     * @param mixed $value
+     * @param  mixed $index
+     * @param  mixed $value
      * @return void
      */
     public function offsetSet($index, $value)
@@ -158,7 +158,7 @@ class ArrayList extends MutableSequence
      * Get an item at a given offset.
      *
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $index
+     * @param  mixed $index
      * @return mixed
      */
     public function offsetGet($index)
@@ -188,7 +188,7 @@ class ArrayList extends MutableSequence
      * Resize the underlying storage, only resize when necessary. When resizing
      * we allocate more than newsize, to avoid resizing each item being added.
      *
-     * @param integer $newsize
+     * @param  integer $newsize
      * @return void
      */
     private function storageResize($newsize)
@@ -220,8 +220,8 @@ class ArrayList extends MutableSequence
     /**
      * Internal routing to insert item to underlying storage
      *
-     * @param integer $where
-     * @param mixed $valud
+     * @param  integer $where
+     * @param  mixed   $valud
      * @return void
      */
     private function insertWhere($where, $value)
@@ -249,7 +249,7 @@ class ArrayList extends MutableSequence
      * Delete an item for the given index `where`, work best if the item being deleted
      * is last element.
      *
-     * @param integer $where
+     * @param  integer $where
      * @return void
      */
     private function deleteWhere($where)
@@ -295,7 +295,7 @@ class ArrayList extends MutableSequence
      * OutOfRangeException
      *
      * @param  integer $index  The index to callculate
-     * @param  string $method method being called by user, used to give better error message
+     * @param  string  $method method being called by user, used to give better error message
      * @return integer The callculated index, this index can be used to access SplFixedArray
      */
     private function guardedSeek($index, $method)
@@ -307,6 +307,7 @@ class ArrayList extends MutableSequence
                 "{$method} was called with invalid index: {$index}"
             );
         }
+
         return $index;
     }
 }

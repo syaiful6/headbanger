@@ -14,7 +14,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
 {
     /**
      * @param  \Traversable|array $iterable
-     * @return self  The new instance current class
+     * @return self               The new instance current class
      */
     protected static function fromIterable($iterable)
     {
@@ -45,6 +45,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
                 return false;
             }
         }
+
         return true;
     }
 
@@ -55,6 +56,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
     public function isProperSubset($other)
     {
         $this->_sanityCheck($other, __METHOD__);
+
         return count($this) < count($other) && $this->isSubset($other);
     }
 
@@ -64,6 +66,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
     public function isSuperset($other)
     {
         $this->_sanityCheck($other, __METHOD__);
+
         return count($this) < count($other) && $this->isProperSuperset($other);
     }
 
@@ -120,6 +123,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
                 }
             }
         };
+
         return static::fromIterable($chain());
     }
 

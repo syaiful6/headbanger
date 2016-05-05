@@ -5,7 +5,6 @@ namespace Headbanger;
 use Countable;
 use ArrayAccess;
 use IteratorAggregate;
-use UnderflowException;
 use OutOfBoundsException;
 use Headbanger\Exception\NotSupportedException;
 
@@ -15,7 +14,7 @@ abstract class Mapping implements Countable, ArrayAccess, IteratorAggregate
      * Get the mapping value by their key. if not exists return provided
      * default.
      *
-     * @param mixed $key The key to retrieve item on mapping
+     * @param mixed $key     The key to retrieve item on mapping
      * @param mixed $default The default value if the mapping not contains $key
      */
     public function get($key, $default = null)
@@ -47,8 +46,8 @@ abstract class Mapping implements Countable, ArrayAccess, IteratorAggregate
      * Take an item in mapping by their key, return the item if exists, otherwise
      * throw \OutOfBoundsException
      *
-     * @param mixed $key The key of item in this mapping
-     * @return mixed The item value
+     * @param  mixed                 $key The key of item in this mapping
+     * @return mixed                 The item value
      * @throws \OutOfBoundsException if key doesn't exists
      */
     public function offsetGet($key)

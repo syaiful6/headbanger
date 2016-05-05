@@ -18,6 +18,7 @@ class HashStorage extends SplFixedArray
         if (! $entry instanceof HashEntry) {
             $entry = $this[$index] = new HashEntry(); // initialize here
         }
+
         return $entry;
     }
 }

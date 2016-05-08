@@ -439,10 +439,10 @@ class HashMap extends MutableMapping
             } else {
                 $hash = $this->hashString(spl_object_hash($key));
             }
-        } elseif (is_numeric($key)) {
-            $hash = $key;
         } elseif (is_string($key)) {
             $hash = $this->hashString($key);
+        } elseif (is_numeric($key) || is_bool($key)) {
+            $hash = (int) $key;
         } else {
             throw new \InvalidArgumentException(sprintf(
                 '%s type can\'t be hashed',

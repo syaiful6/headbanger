@@ -74,39 +74,6 @@ class HashMap extends MutableMapping
         $this->_update($iterable);
     }
 
-     /**
-     *
-     */
-    public function popItem()
-    {
-        if ($this->isEmpty()) {
-            throw new UnderflowException(sprintf(
-                'Trying to pop item of an empty %s', get_class($this)));
-        }
-        $entry0 = $this->table[0];
-        $entry = $entry0;
-        $i = 0;
-        if ($entry0->value === null) {
-            $i = $entry0->hash;
-            if ($i > $this->mask || $i < $i) {
-                $i = 1;
-            }
-            $entry = $this->table[$i];
-            while ($entry->value === null) {
-                $i += 1;
-                if ($i > $this->mask) {
-                    $i = 1;
-                }
-                $entry = $this->table[$i];
-            }
-        }
-        $res = [$entry->key, $entry->value];
-        $this->_del($entry);
-        # Set the next place to start.
-        $entry0->hash = $i + 1;
-        return $res;
-    }
-
     /**
      *
      */

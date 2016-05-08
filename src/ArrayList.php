@@ -32,16 +32,14 @@ class ArrayList extends MutableSequence
     {
         $this->items = new SplFixedArray(0); // just initialize with 0 capacity
         if ($iterable !== null) {
-            if (is_array($iterable)) {
-                $this->extend(\array_values($iterable));
-            } else {
-                $this->extend($iterable);
-            }
+            $this->extend($iterable);
         }
     }
 
     /**
+     * Clear all item on list
      *
+     * @return void
      */
     public function clear()
     {

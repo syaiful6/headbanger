@@ -1,7 +1,6 @@
 <?php
 namespace Headbanger\Tests;
 
-use Mockery as m;
 use PHPUnit_Framework_TestCase;
 use Headbanger\ArrayList;
 
@@ -78,7 +77,7 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
     public function testGetItemNegativeIndices()
     {
         $list = $this->getInstance();
-        $list->extend([1,2,3,4]);
+        $list->extend([1, 2, 3, 4]);
         $this->assertEquals(4, $list[-1]);
         $this->assertEquals(3, $list[-2]);
     }
@@ -89,10 +88,67 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
     public function testClearList()
     {
         $list = $this->getInstance();
-        $list->extend([1,2,3,4]);
+        $list->extend([1, 2, 3, 4]);
         $this->assertCount(4, $list);
         $list->clear();
         $this->assertCount(0, $list);
+    }
+
+    /**
+     *
+     */
+    public function testPopItemList()
+    {
+        $list = $this->getInstance();
+        $list->extend([1, 2, 3]);
+        $this->assertEquals(3, $list->pop());
+        $this->assertEquals(1, $list->pop(0));
+        $this->assertCount(1, $list);
+    }
+
+    /**
+     *
+     */
+    public function testReverseList()
+    {
+        $list = $this->getInstance();
+        $list->extend([1, 2, 3]);
+        $this->assertEquals(1, $list[0]);
+        $list->reverse();
+        $this->assertEquals(3, $list[0]);
+        $this->assertEquals(2, $list[2]);
+    }
+
+    /**
+     *
+     */
+    public function testContainsList()
+    {
+        $list = $this->getInstance();
+        $list->push('foo');
+        $list->push('bar');
+        $this->assertTrue($list->contains('foo'));
+    }
+
+    /**
+     *
+     */
+    public function testGetIndexOfAnItem()
+    {
+        $list = $this->getInstance();
+        $list->push('foo');
+        $list->push('bar');
+        $this->assertEquals(0, $list->index('foo'));
+    }
+
+    /**
+     * @expectedException \Headbanger\Exceptions\ValueException
+     */
+    public function testGetIndexOfAnExistsItem()
+    {
+        $list = $this->getInstance();
+        $list->push('foo');
+        $list->index('baz');
     }
 
     /**
@@ -120,7 +176,7 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
     public function testExceptionInvalidIndex()
     {
         $list = $this->getInstance();
-        $list->extend([0,1,2]);
+        $list->extend([0, 1, 2]);
         $list[3]; // 3 is invalid
     }
 }

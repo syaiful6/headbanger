@@ -2,8 +2,8 @@
 
 PHP data structure and or collections.
 
-Motivation: PHP only give us array as compound type. This make
-operation on array not predictable, is sometimes act as ordered set, list, ordered map.
+Motivation: PHP only give us array and object as compound type. There are no list,
+hash table, set, etc. Array on PHP doest it all. This make operation on array not predictable, is sometimes act as ordered set, list, ordered map.
 This package aim to provide some basic data structure to cover this gap.
 
 ### Install

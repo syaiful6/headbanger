@@ -8,13 +8,13 @@ use Headbanger\HashMap;
 
 class HashMapTest extends PHPUnit_Framework_TestCase
 {
-
     public function tearDown()
     {
         m::close();
     }
 
-    public function testCountEmptyReturnsZero() {
+    public function testCountEmptyReturnsZero()
+    {
         $map = new HashMap();
         $this->assertCount(0, $map);
     }
@@ -52,7 +52,6 @@ class HashMapTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $map['foo']);
         $this->assertCount(2, $map);
         $this->assertFalse($map->isEmpty());
-
     }
 
     /**
@@ -196,5 +195,36 @@ class HashMapTest extends PHPUnit_Framework_TestCase
         $this->assertCount(2, $map);
         $this->assertEquals('replaced', $map['foo']);
         $this->assertEquals('replaced', $map['lorem']);
+    }
+
+    /**
+     *
+     */
+    public function testPopItemMap()
+    {
+        $map = new HashMap();
+        $map['lorem'] = 'ipsum';
+        $this->assertEquals(['lorem', 'ipsum'], $map->popItem());
+    }
+
+    /**
+     * @expectedException UnderflowException
+     */
+    public function testPopItemOnEmptyMap()
+    {
+        $map = new HashMap();
+        $map->popItem();
+    }
+
+    /**
+     *
+     */
+    public function testPopMethodOnMapping()
+    {
+        $map = new HashMap();
+        $map['foo'] = 'bar';
+        $this->assertEquals('bar', $map->pop('foo'));
+        $this->assertCount(0, $map);
+        $this->assertEquals('default', $map->pop('any', 'default'));
     }
 }

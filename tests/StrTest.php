@@ -2,7 +2,6 @@
 
 namespace Headbanger\Tests;
 
-use Mockery as m;
 use PHPUnit_Framework_TestCase;
 use Headbanger\Str;
 

@@ -23,7 +23,11 @@ abstract class Mapping implements Countable, ArrayAccess, IteratorAggregate
             return $default;
         }
 
-        return $this->contains($key) ? $this[$key] : $default;
+        try {
+            return $this[$key];
+        } catch (OutOfBoundsException $e) {
+            return $default;
+        }
     }
 
     /**

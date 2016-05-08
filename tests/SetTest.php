@@ -29,4 +29,16 @@ class SetTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($s1->isSubset($s2));
         $this->assertFalse($s2->isSubset($s1));
     }
+
+    /**
+     *
+     */
+    public function testIsSupersetOperation()
+    {
+        $s1 = new Set([1, 2, 3]);
+        $s2 = new Set([1, 2]);
+
+        $this->assertTrue($s1->isSuperset($s2));
+        $this->assertFalse($s2->isSuperset($s1));
+    }
 }

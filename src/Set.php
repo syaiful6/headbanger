@@ -5,7 +5,7 @@ namespace Headbanger;
 class Set extends BaseSet
 {
     /**
-     * @param HashTable
+     * @param HashMap
      */
     protected $members;
 

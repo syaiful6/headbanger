@@ -67,7 +67,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
     {
         $this->_sanityCheck($other, __METHOD__);
 
-        return count($this) < count($other) && $this->isProperSuperset($other);
+        return $other->isSubset($this);
     }
 
     /**
@@ -76,17 +76,25 @@ abstract class BaseSet implements Countable, IteratorAggregate
     public function isProperSuperset($other)
     {
         $this->_sanityCheck($other, __METHOD__);
-        if (count($this) < count($other)) {
-            return false;
-        }
 
-        foreach ($other as $el) {
-            if (! $this->contains($el)) {
-                return false;
+        return $other->isProperSubset($this);
+    }
+
+    /**
+     *
+     */
+    public function intersection($other)
+    {
+        if (!$other instanceof BaseSet) {
+            $other = static::fromIterable($other);
+        }
+        return static::fromIterable(call_user_func(function () use ($other) {
+            foreach ($other as $el) {
+                if ($this->contains($el)) {
+                    yield $el;
+                }
             }
-        }
-
-        return true;
+        }));
     }
 
     /**
@@ -133,13 +141,6 @@ abstract class BaseSet implements Countable, IteratorAggregate
     public function difference($other)
     {
         if (! $other instanceof BaseSet) {
-            if (! $other instanceof \Traversable) {
-                throw new RuntimeException(sprintf(
-                    'parameter 1 passed to %s must be instance of %s or Traversable',
-                    __METHOD__,
-                    BaseSet::class
-                ));
-            }
             $other = static::fromIterable($other);
         }
 
@@ -158,13 +159,6 @@ abstract class BaseSet implements Countable, IteratorAggregate
     public function symmetricDifference($other)
     {
         if (! $other instanceof BaseSet) {
-            if (! $other instanceof \Traversable) {
-                throw new RuntimeException(sprintf(
-                    'parameter 1 passed to %s must be instance of %s or Traversable',
-                    __METHOD__,
-                    BaseSet::class
-                ));
-            }
             $other = static::fromIterable($other);
         }
         $diff = $this->difference($other);

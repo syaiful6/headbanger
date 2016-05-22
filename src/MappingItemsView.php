@@ -40,8 +40,7 @@ class MappingItemsView extends BaseSet
      */
     public function getIterator()
     {
-        $iterator = parent::getIterator();
-        foreach ($iterator as $key) {
+        foreach ($this->mapping as $key) {
             yield [$key, $this->mapping[$key]];
         }
     }

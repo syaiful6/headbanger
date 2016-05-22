@@ -165,7 +165,7 @@ class HashMap extends MutableMapping
                     "Hashtable size changed during iteration");
             }
             $entry = $this->table[$i];
-            if ($entry->key === null) {
+            if ($entry->key === null || $entry->key === $this->dummy) {
                 continue;
             }
             yield $entry->key;

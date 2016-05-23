@@ -205,7 +205,7 @@ class HashMap extends MutableMapping
             if ($entry->hash === $hash && strcmp($entry->key, $key) === 0) {
                 return $entry;
             } elseif ($entry->key === $this->dummy && $free === null) {
-                $free = $dummy;
+                $free = $entry;
             }
         }
 
@@ -271,7 +271,7 @@ class HashMap extends MutableMapping
             if ($entry->hash === $hash && $this->keyAreEqual($entry->key, $key)) {
                 return $entry;
             } elseif ($entry->key === $this->dummy && $free === null) {
-                $free = $dummy;
+                $free = $entry;
             }
         }
     }

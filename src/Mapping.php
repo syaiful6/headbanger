@@ -48,7 +48,7 @@ abstract class Mapping implements Countable, ArrayAccess, IteratorAggregate
 
     /**
      * Take an item in mapping by their key, return the item if exists, otherwise
-     * throw \OutOfBoundsException
+     * throw \OutOfBoundsException.
      *
      * @param  mixed                 $key The key of item in this mapping
      * @return mixed                 The item value
@@ -101,7 +101,7 @@ abstract class Mapping implements Countable, ArrayAccess, IteratorAggregate
         return new MappingItemsView($this);
     }
 
-     /**
+    /**
      *
      */
     public function offsetUnset($key)

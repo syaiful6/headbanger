@@ -15,7 +15,8 @@
         "php": ">=5.6"
     },
     "require-dev": {
-        "mockery/mockery": "~0.9"
+        "mockery/mockery": "~0.9",
+        "syaiful6/itertools": "~0.1"
     },
     "autoload": {
         "psr-4": {

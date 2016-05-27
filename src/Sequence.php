@@ -19,9 +19,9 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * Check if this sequence is empty or not
+     * Check if this sequence is empty or not.
      *
-     * @return boolean
+     * @return bool
      */
     public function isEmpty()
     {
@@ -29,10 +29,10 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * Check if this sequence contains for given elem
+     * Check if this sequence contains for given elem.
      *
      * @param  mixed   $value
-     * @return boolean
+     * @return bool
      */
     public function contains($value)
     {
@@ -46,10 +46,10 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * Return the first index of the given value
+     * Return the first index of the given value.
      *
      * @param  mixed                                 $value
-     * @return integer
+     * @return int
      * @throws \Headbanger\Exceptions\ValueException if the value not in sequence
      */
     public function index($value)
@@ -83,10 +83,10 @@ abstract class Sequence implements Countable, ArrayAccess, IteratorAggregate
     }
 
     /**
-     * Check how many value in this sequence
+     * Check how many value in this sequence.
      *
      * @param  mixed   $value
-     * @return integer
+     * @return int
      */
     public function countValue($value)
     {

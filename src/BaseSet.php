@@ -5,10 +5,11 @@ namespace Headbanger;
 use Countable;
 use IteratorAggregate;
 use RuntimeException;
+
 /**
  * This class provides common set operation like unions, difference,
  * and membership testing. Subclass only need to implements an abstract function
- * contains, count and getIterator
+ * contains, count and getIterator.
  */
 abstract class BaseSet implements Countable, IteratorAggregate
 {
@@ -22,10 +23,10 @@ abstract class BaseSet implements Countable, IteratorAggregate
     }
 
     /**
-     * Determine a given item exists in sets, pass them to the storage
+     * Determine a given item exists in sets, pass them to the storage.
      *
      * @param  mixed   $elem
-     * @return boolean
+     * @return bool
      */
     abstract public function contains($elem);
 
@@ -51,7 +52,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
 
     /**
      * Test whether the set is a proper subset of other. In other words
-     * set <= other and set != other
+     * set <= other and set != other.
      */
     public function isProperSubset($other)
     {
@@ -71,7 +72,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
     }
 
     /**
-     * Test whether the set is a proper superset of other
+     * Test whether the set is a proper superset of other.
      */
     public function isProperSuperset($other)
     {
@@ -85,9 +86,10 @@ abstract class BaseSet implements Countable, IteratorAggregate
      */
     public function intersection($other)
     {
-        if (!$other instanceof BaseSet) {
+        if (! $other instanceof self) {
             $other = static::fromIterable($other);
         }
+
         return static::fromIterable(call_user_func(function () use ($other) {
             foreach ($other as $el) {
                 if ($this->contains($el)) {
@@ -111,9 +113,9 @@ abstract class BaseSet implements Countable, IteratorAggregate
         return true;
     }
 
-    /**
-     *
-     */
+     /**
+      *
+      */
      public function equals($other)
      {
          return count($this) === count($other) && $this->isSubset($other);
@@ -140,7 +142,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
      */
     public function difference($other)
     {
-        if (! $other instanceof BaseSet) {
+        if (! $other instanceof self) {
             $other = static::fromIterable($other);
         }
 
@@ -158,7 +160,7 @@ abstract class BaseSet implements Countable, IteratorAggregate
      */
     public function symmetricDifference($other)
     {
-        if (! $other instanceof BaseSet) {
+        if (! $other instanceof self) {
             $other = static::fromIterable($other);
         }
         $diff = $this->difference($other);
@@ -168,16 +170,15 @@ abstract class BaseSet implements Countable, IteratorAggregate
     }
 
     /**
-     * Internal routine to check if other is instance of this class
-     *
+     * Internal routine to check if other is instance of this class.
      */
     private function _sanityCheck($other, $method)
     {
-        if (! $other instanceof BaseSet) {
+        if (! $other instanceof self) {
             throw new RuntimeException(sprintf(
                 'parameter 1 passed to %s must be instance of %s',
                 $method,
-                BaseSet::class
+                self::class
             ));
         }
     }

@@ -9,21 +9,21 @@ use Headbanger\Utils\Slice;
 class ArrayList extends MutableSequence
 {
     /**
-     * The size of this sequence
+     * The size of this sequence.
      *
-     * @var integer
+     * @var int
      */
     protected $size = 0;
 
     /**
-     * The undelying storage used
+     * The undelying storage used.
      *
      * @var \SplFixedArray
      */
     protected $items;
 
     /**
-     * Construct ArrayList, optionally give it initial value
+     * Construct ArrayList, optionally give it initial value.
      *
      * @param \Traversable|array
      * @return void
@@ -37,7 +37,7 @@ class ArrayList extends MutableSequence
     }
 
     /**
-     * Clear all item on list
+     * Clear all item on list.
      *
      * @return void
      */
@@ -48,10 +48,10 @@ class ArrayList extends MutableSequence
     }
 
     /**
-     * Count the number of items
+     * Count the number of items.
      *
      * @link http://php.net/manual/en/countable.count.php
-     * @return integer
+     * @return int
      */
     public function count()
     {
@@ -59,9 +59,9 @@ class ArrayList extends MutableSequence
     }
 
     /**
-     * insert value before index
+     * insert value before index.
      *
-     * @param  integer $index
+     * @param  int $index
      * @param  mixed   $value
      * @return void
      */
@@ -72,7 +72,7 @@ class ArrayList extends MutableSequence
     }
 
     /**
-     * Assign a value to the specified offset
+     * Assign a value to the specified offset.
      *
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
      * @param  mixed $index
@@ -142,7 +142,7 @@ class ArrayList extends MutableSequence
     }
 
     /**
-     * Determine of the given index is exists
+     * Determine of the given index is exists.
      *
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
      * @param mixed $index
@@ -186,7 +186,7 @@ class ArrayList extends MutableSequence
      * Resize the underlying storage, only resize when necessary. When resizing
      * we allocate more than newsize, to avoid resizing each item being added.
      *
-     * @param  integer $newsize
+     * @param  int $newsize
      * @return void
      */
     private function storageResize($newsize)
@@ -216,9 +216,9 @@ class ArrayList extends MutableSequence
     }
 
     /**
-     * Internal routing to insert item to underlying storage
+     * Internal routing to insert item to underlying storage.
      *
-     * @param  integer $where
+     * @param  int $where
      * @param  mixed   $valud
      * @return void
      */
@@ -238,7 +238,7 @@ class ArrayList extends MutableSequence
         }
 
         for ($i = $n; --$i >= $where;) {
-            $this->items[$i+1] = $this->items[$i];
+            $this->items[$i + 1] = $this->items[$i];
         }
         $this->items[$where] = $value;
     }
@@ -247,7 +247,7 @@ class ArrayList extends MutableSequence
      * Delete an item for the given index `where`, work best if the item being deleted
      * is last element.
      *
-     * @param  integer $where
+     * @param  int $where
      * @return void
      */
     private function deleteWhere($where)
@@ -263,13 +263,13 @@ class ArrayList extends MutableSequence
             $where = $n - 1;
         }
         for ($i = $where; $i < $n; $i++) {
-            $this->items[$i] = $this->items[$i+1];
+            $this->items[$i] = $this->items[$i + 1];
         }
         $this->size--;
     }
 
     /**
-     * Just utils to convert any iterable to iterator object, used when slicing
+     * Just utils to convert any iterable to iterator object, used when slicing.
      *
      * @param \Traversable|array $iterable
      */
@@ -290,11 +290,11 @@ class ArrayList extends MutableSequence
     /**
      * Internal routine to callculate the actual index, because we support negative
      * indexing. If the calculateOffset return invalid offset then it throws
-     * OutOfRangeException
+     * OutOfRangeException.
      *
-     * @param  integer $index  The index to callculate
+     * @param  int $index  The index to callculate
      * @param  string  $method method being called by user, used to give better error message
-     * @return integer The callculated index, this index can be used to access SplFixedArray
+     * @return int The callculated index, this index can be used to access SplFixedArray
      */
     private function guardedSeek($index, $method)
     {

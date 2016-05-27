@@ -3,9 +3,10 @@
 namespace Headbanger\Utils;
 
 use SplFixedArray;
+
 /**
  * To allow lazy initialization of HashEntry, previosly we iterate the SplFixedArray
- * and set all slots to instance of HashEntry
+ * and set all slots to instance of HashEntry.
  */
 class HashStorage extends SplFixedArray
 {

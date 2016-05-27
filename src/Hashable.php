@@ -17,10 +17,10 @@ interface Hashable
     public function hashCode();
 
     /**
-     * Test other object or acceptable type passed is equal
+     * Test other object or acceptable type passed is equal.
      *
      * @param  mixed   $other
-     * @return boolean
+     * @return bool
      */
     public function equals($other);
 }

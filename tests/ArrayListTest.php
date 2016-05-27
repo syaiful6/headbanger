@@ -1,4 +1,5 @@
 <?php
+
 namespace Headbanger\Tests;
 
 use PHPUnit_Framework_TestCase;

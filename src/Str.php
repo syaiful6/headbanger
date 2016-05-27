@@ -6,8 +6,9 @@ use RuntimeException;
 use OutOfRangeException;
 use Headbanger\Utils\Slice;
 use Headbanger\Exceptions\ValueException;
+
 /**
- * Require mb string or Symfony mb string polyfill
+ * Require mb string or Symfony mb string polyfill.
  */
 class Str extends Sequence implements Hashable
 {
@@ -50,7 +51,7 @@ class Str extends Sequence implements Hashable
 
     /**
      * Magic method when cast this object as string
-     * like (string) $this
+     * like (string) $this.
      *
      * @return string
      */
@@ -72,7 +73,7 @@ class Str extends Sequence implements Hashable
      */
     public function contains($other)
     {
-        if ($other instanceof Str ||
+        if ($other instanceof self ||
             (is_object($other) && method_exists($other, '__toString'))) {
             $other = strval($other);
         }
@@ -83,14 +84,13 @@ class Str extends Sequence implements Hashable
     /**
      * Find the position for the given substring in string
      * using start and stop. Not like PHP do, this method will always results
-     * integer. When it can't see the substring, it will return -1
-     *
+     * integer. When it can't see the substring, it will return -1.
      */
     public function find($sub, $start = 0, $stop = PHP_INT_MAX)
     {
         $slice = new Slice($start, $stop);
         list($start, $stop, $step) = $slice->indices(count($this));
-        if ($sub instanceof Str ||
+        if ($sub instanceof self ||
             (is_object($sub) && method_exists($sub, '__toString'))) {
             $sub = strval($sub);
         }
@@ -103,8 +103,7 @@ class Str extends Sequence implements Hashable
     }
 
     /**
-     * Like static#find but will raise exception if not found
-     *
+     * Like static#find but will raise exception if not found.
      */
     public function index($sub, $start = 0, $stop = PHP_INT_MAX)
     {
@@ -122,14 +121,13 @@ class Str extends Sequence implements Hashable
     /**
      * Find the position for the given substring in string
      * using start and stop. Not like PHP do, this method will always results
-     * integer. When it can't see the substring, it will return -1
-     *
+     * integer. When it can't see the substring, it will return -1.
      */
     public function rfind($sub, $start = 0, $stop = PHP_INT_MAX)
     {
         $slice = new Slice($start, $stop);
         list($start, $stop, $step) = $slice->indices(count($this));
-        if ($sub instanceof Str ||
+        if ($sub instanceof self ||
             (is_object($sub) && method_exists($sub, '__toString'))) {
             $sub = strval($sub);
         }
@@ -170,7 +168,7 @@ class Str extends Sequence implements Hashable
      * Replace tab character with spaces. The length of space is according
      * to the parameter, default to 8.
      *
-     * @param integer $tabsize The tabsize to apply
+     * @param int $tabsize The tabsize to apply
      */
     public function expandTabs($tabsize = 8)
     {
@@ -189,8 +187,7 @@ class Str extends Sequence implements Hashable
 
     /**
      * Partition the undelyting string, and return 3 tuple
-     * when can't find the sep, the fist index tuple is original string
-     *
+     * when can't find the sep, the fist index tuple is original string.
      */
     public function partition($sep)
     {
@@ -240,7 +237,7 @@ class Str extends Sequence implements Hashable
      */
     public function splitLines($keepend = false)
     {
-        if (!$keepend) {
+        if (! $keepend) {
             return preg_split('#$\R?^#m', $this->string);
         }
 
@@ -251,11 +248,11 @@ class Str extends Sequence implements Hashable
      * Return an array of the words in the string,
      * using sep as the delimiter string. If maxsplit is given,
      * at most maxsplit splits are done
-     * (thus, the list will have at most maxsplit+1 elements)
+     * (thus, the list will have at most maxsplit+1 elements).
      *
      * @param string  $str       The string to split
      * @param string  $delimeter delimeter or pattern to split the string
-     * @param integer $maxsplit
+     * @param int $maxsplit
      */
     public function rsplit($delimeter = null, $maxsplit = -1)
     {
@@ -277,11 +274,11 @@ class Str extends Sequence implements Hashable
      * Return an array of the words in the string,
      * using sep as the delimiter string. If maxsplit is given,
      * at most maxsplit splits are done
-     * (thus, the list will have at most maxsplit+1 elements)
+     * (thus, the list will have at most maxsplit+1 elements).
      *
      * @param string  $str       The string to split
      * @param string  $delimeter delimeter or pattern to split the string
-     * @param integer $maxsplit
+     * @param int $maxsplit
      */
     public function split($delimeter = null, $maxsplit = -1)
     {
@@ -322,7 +319,7 @@ class Str extends Sequence implements Hashable
     }
 
     /**
-     * Capitalize the underlying string
+     * Capitalize the underlying string.
      */
     public function capitalize()
     {
@@ -524,7 +521,7 @@ class Str extends Sequence implements Hashable
     }
 
     /**
-     * Determine of the given index is exists
+     * Determine of the given index is exists.
      *
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
      * @param mixed $index
@@ -535,7 +532,7 @@ class Str extends Sequence implements Hashable
     }
 
     /**
-     * [hashString description]
+     * [hashString description].
      * @param  [type] $string [description]
      * @return [type] [description]
      */
@@ -559,7 +556,7 @@ class Str extends Sequence implements Hashable
      */
     public function equals($other)
     {
-        if ($other instanceof Str) {
+        if ($other instanceof self) {
             return $this->string === strval($other);
         } elseif (is_string($other)) {
             return $this->string === $other;

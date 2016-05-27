@@ -1,4 +1,5 @@
 <?php
+
 namespace Headbanger\Tests;
 
 use Mockery as m;
@@ -85,7 +86,7 @@ class HashMapTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $map[$hashable]);
     }
 
-     /**
+    /**
      *
      */
     public function testSetAndContains()

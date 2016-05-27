@@ -39,12 +39,13 @@ class HashMap extends MutableMapping
     /**
      *
      */
-    public static function fromKeys($keys, $value=0)
+    public static function fromKeys($keys, $value = 0)
     {
         $dict = new self();
         foreach ($keys as $key) {
             $dict[$key] = $value;
         }
+
         return $dict;
     }
 
@@ -88,6 +89,7 @@ class HashMap extends MutableMapping
         if ($entry->value === null) {
             return $this->offsetMissing($key);
         }
+
         return $entry->value;
     }
 
@@ -96,7 +98,7 @@ class HashMap extends MutableMapping
      */
     protected function offsetMissing($key)
     {
-        throw new OutOfBoundsException("no such key in collection");
+        throw new OutOfBoundsException('no such key in collection');
     }
 
     /**
@@ -105,7 +107,7 @@ class HashMap extends MutableMapping
     public function offsetSet($key, $value)
     {
         if ($key === null || $value === null) {
-            throw new \InvalidArgumentException("Invalid key. Key cant be Null");
+            throw new \InvalidArgumentException('Invalid key. Key cant be Null');
         }
         $this->_insert($key, $value);
     }
@@ -116,17 +118,17 @@ class HashMap extends MutableMapping
     public function offsetUnset($key)
     {
         if ($key === null) {
-            throw new \InvalidArgumentExceptin("Invalid key. Key cant be Null");
+            throw new \InvalidArgumentExceptin('Invalid key. Key cant be Null');
         }
         if ($this->isEmpty()) {
             throw new UnderflowException(
-                "Trying to delete an item in empty collection");
+                'Trying to delete an item in empty collection');
         }
         $hash = $this->computeHash($key);
         $lookup = $this->lookup;
         $entry = $this->$lookup($hash, $key);
         if ($entry->value === null) {
-            throw new OutOfBoundsException("no such key in collection");
+            throw new OutOfBoundsException('no such key in collection');
         }
         $this->_del($entry);
     }
@@ -148,6 +150,7 @@ class HashMap extends MutableMapping
         if ($entry->value === null) {
             $this[$key] = $value;
         }
+
         return $value;
     }
 
@@ -162,7 +165,7 @@ class HashMap extends MutableMapping
         for ($i = $pos; $i <= $size; $i++) {
             if ($used !== count($this)) {
                 throw new \RuntimeException(
-                    "Hashtable size changed during iteration");
+                    'Hashtable size changed during iteration');
             }
             $entry = $this->table[$i];
             if ($entry->key === null || $entry->key === $this->dummy) {
@@ -177,7 +180,7 @@ class HashMap extends MutableMapping
      */
     private function stringOnlyLookup($hash, $key)
     {
-        if (!is_string($key)) {
+        if (! is_string($key)) {
             $this->lookup = 'lookupEntry';
 
             return $this->lookupEntry($hash, $key);
@@ -217,7 +220,7 @@ class HashMap extends MutableMapping
      */
     private function stringOnlyLookupNoDummy($hash, $key)
     {
-        if (!is_string($key)) {
+        if (! is_string($key)) {
             $this->lookup = 'lookupEntry';
 
             return $this->lookupEntry($hash, $key);
@@ -243,7 +246,7 @@ class HashMap extends MutableMapping
     }
 
     /**
-     * the key is appear to
+     * the key is appear to.
      */
     private function lookupEntry($hash, $key)
     {
@@ -281,7 +284,7 @@ class HashMap extends MutableMapping
      */
     private function findEmptySlot($hash, $key)
     {
-        if (!is_string($key)) {
+        if (! is_string($key)) {
             $this->lookup = 'lookupEntry';
         }
         $i = $hash & $this->mask;
@@ -291,6 +294,7 @@ class HashMap extends MutableMapping
             $entry = $this->table[$i & $this->mask];
         }
         assert($entry->value === null);
+
         return $entry;
     }
 
@@ -327,6 +331,7 @@ class HashMap extends MutableMapping
         $this->usable = $this->usableFraction($size);
         $this->dummy = spl_object_hash($table);
         $this->mask = $size - 1;
+
         return $table;
     }
 
@@ -449,14 +454,15 @@ class HashMap extends MutableMapping
                 gettype($key)
             ));
         }
+
         return $hash;
     }
 
     /**
-     * Naive and dump implementation to hash string
+     * Naive and dump implementation to hash string.
      *
      * @param  string $string
-     * @return integer
+     * @return int
      */
     private function hashString($string)
     {
@@ -468,6 +474,7 @@ class HashMap extends MutableMapping
             $hash ^= (31 * $hash) + ord($string[$i]);
         }
         $this->hashedString[$string] = $hash;
+
         return $hash;
     }
 

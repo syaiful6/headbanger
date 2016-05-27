@@ -8,16 +8,16 @@ use UnderflowException;
 abstract class MutableSequence extends Sequence
 {
     /**
-     * insert value before index
+     * insert value before index.
      *
-     * @param  integer $index
+     * @param  int $index
      * @param  mixed   $value
      * @return void
      */
     abstract public function insert($index, $value);
 
     /**
-     * Push one element onto the end of sequence
+     * Push one element onto the end of sequence.
      *
      * @param  mixed $value
      * @return void
@@ -45,7 +45,7 @@ abstract class MutableSequence extends Sequence
     }
 
     /**
-     * reverse this sequence in place
+     * reverse this sequence in place.
      *
      * @return void
      */
@@ -54,12 +54,12 @@ abstract class MutableSequence extends Sequence
         $n = count($this);
         $x = floor($n / 2) - 1; // the end of indices
         foreach (range(0, $x) as $i) {
-            list($this[$i], $this[$n-$i-1]) = [$this[$n-$i-1], $this[$i]];
+            list($this[$i], $this[$n - $i - 1]) = [$this[$n - $i - 1], $this[$i]];
         }
     }
 
     /**
-     * Extend the iterable
+     * Extend the iterable.
      *
      * @param  \Traversable|array $iterable
      * @return void
@@ -74,16 +74,16 @@ abstract class MutableSequence extends Sequence
     /**
      * retrieves the item at i and also removes it from sequence
      * default to -1, it's mean the default retrieve the last element and remove
-     * it, change to 0 if you want to make effect like array_shift
+     * it, change to 0 if you want to make effect like array_shift.
      *
-     * @param  integer $i
+     * @param  int $i
      * @return mixed
      */
     public function pop($i = -1)
     {
         if ($this->isEmpty()) {
             throw new UnderflowException(
-                "trying to pop element on an empty sequence"
+                'trying to pop element on an empty sequence'
             );
         }
         $value = $this[$i];
@@ -92,22 +92,21 @@ abstract class MutableSequence extends Sequence
         return $value;
     }
 
-     /**
+    /**
      *
      */
     public function remove($value)
     {
         if ($this->isEmpty()) {
             throw new UnderflowException(
-                "trying to pop element on an empty sequence"
+                'trying to pop element on an empty sequence'
             );
         }
         unset($this[$this->index($value)]);
     }
 
     /**
-     * Must be overriden on child class
-     *
+     * Must be overriden on child class.
      */
     public function offsetSet($index, $value)
     {

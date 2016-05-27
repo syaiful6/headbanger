@@ -3,7 +3,7 @@
 namespace Headbanger\Utils;
 
 /**
- * Represent slicing indices for use with sequence
+ * Represent slicing indices for use with sequence.
  */
 class Slice
 {

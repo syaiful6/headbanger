@@ -51,10 +51,13 @@ abstract class MutableSequence extends Sequence
      */
     public function reverse()
     {
-        $n = count($this);
-        $x = floor($n / 2) - 1; // the end of indices
-        foreach (range(0, $x) as $i) {
-            list($this[$i], $this[$n - $i - 1]) = [$this[$n - $i - 1], $this[$i]];
+        $hi = count($this);
+        $lo = 0;
+        $hi--;
+        while ($lo < $hi) {
+            $t = $this[$lo];
+            $this[$lo++] = $this[$hi];
+            $this[$hi--] = $t;
         }
     }
 

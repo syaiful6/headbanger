@@ -4,6 +4,7 @@ namespace Headbanger\Tests;
 
 use PHPUnit_Framework_TestCase;
 use Headbanger\ArrayList;
+use Headbanger\Utils\Slice;
 
 class ArrayListTest extends PHPUnit_Framework_TestCase
 {
@@ -75,6 +76,18 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
     /**
      *
      */
+    public function testSliceLists()
+    {
+        $list = $this->getInstance();
+        $list->extend([1, 2, 3, 4,5]);
+        $slice = new Slice(0, 3);
+        $slicing = $list[$slice];
+        $this->assertCount(3, $slicing);
+    }
+
+    /**
+     *
+     */
     public function testGetItemNegativeIndices()
     {
         $list = $this->getInstance();
@@ -117,7 +130,8 @@ class ArrayListTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $list[0]);
         $list->reverse();
         $this->assertEquals(3, $list[0]);
-        $this->assertEquals(2, $list[2]);
+        $this->assertEquals(2, $list[1]);
+        $this->assertEquals(1, $list[2]);
     }
 
     /**

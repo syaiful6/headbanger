@@ -83,7 +83,7 @@ class ArrayList extends MutableSequence
     {
         if (! $index instanceof Slice) {
             $index = $this->guardedSeek($index, __METHOD__);
-            $this->insertWhere($index, $value);
+            $this->items[$index] = $value;
 
             return;
         }

@@ -98,7 +98,7 @@ class HashMap extends MutableMapping
      */
     protected function offsetMissing($key)
     {
-        throw new OutOfBoundsException('no such key in collection');
+        throw new OutOfBoundsException("no such $key key in collection");
     }
 
     /**
@@ -107,7 +107,7 @@ class HashMap extends MutableMapping
     public function offsetSet($key, $value)
     {
         if ($key === null || $value === null) {
-            throw new \InvalidArgumentException('Invalid key. Key cant be Null');
+            throw new \InvalidArgumentException('Invalid key or value. Key and value cant be Null');
         }
         $this->_insert($key, $value);
     }
@@ -128,7 +128,7 @@ class HashMap extends MutableMapping
         $lookup = $this->lookup;
         $entry = $this->$lookup($hash, $key);
         if ($entry->value === null) {
-            throw new OutOfBoundsException('no such key in collection');
+            throw new OutOfBoundsException("no such $key key in collection");
         }
         $this->_del($entry);
     }
@@ -202,7 +202,7 @@ class HashMap extends MutableMapping
         for ($perturb = $hash; ;$perturb >>= self::PERTURB_SHIFT) {
             $i = ($i << 2) + $i + $perturb + 1;
             $entry = $this->table[$i & $this->mask];
-            if ($entry->key === null || strcmp($entry->key, $key) === 0) {
+            if ($entry->key === null) {
                 return $free === null ? $entry : $free;
             }
             if ($entry->hash === $hash && strcmp($entry->key, $key) === 0) {
@@ -238,7 +238,7 @@ class HashMap extends MutableMapping
         for ($perturb = $hash; ;$perturb >>= self::PERTURB_SHIFT) {
             $i = ($i << 2) + $i + $perturb + 1;
             $entry = $this->table[$i & $this->mask];
-            if ($entry->key === null || strcmp($entry->key, $key) === 0 ||
+            if ($entry->key === null ||
                 ($entry->hash === $hash && strcmp($entry->key, $key) === 0)) {
                 return $entry;
             }
@@ -268,7 +268,7 @@ class HashMap extends MutableMapping
         for ($perturb = $hash; ;$perturb >>= self::PERTURB_SHIFT) {
             $i = ($i << 2) + $i + $perturb + 1;
             $entry = $this->table[$i & $this->mask];
-            if ($entry->key === null || $entry->key === $key) {
+            if ($entry->key === null) {
                 return $free === null ? $entry : $free;
             }
             if ($entry->hash === $hash && $this->keyAreEqual($entry->key, $key)) {
@@ -355,10 +355,9 @@ class HashMap extends MutableMapping
         $this->table = $this->createNewTable($newsize);
 
         $i = $this->used;
-        for ($j = 0; $i > 0; $j++) {
+        for ($j = 0; $i > 0 && $j < $oldsize; $j++) {
             $entry = $oldTable[$j];
             if ($entry->value !== null) {
-                assert($entry->key !== $dummy);
                 $this->insertClean($entry->hash, $entry->key, $entry->value);
                 $i--;
             }
